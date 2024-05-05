@@ -1,8 +1,33 @@
 import pygame
 import sys
 import time
+from tictactoe import TicTacToe
 
-import tictactoe as ttt
+# Prompt the user to choose an algorithm
+print("Please choose one of the following algorithms:")
+print("1. minimax")
+print("2. reinforcement_learning")
+print("3. deep_reinforcement_learning")
+
+# Get user input
+algorithm_choice = input("Enter the number corresponding to your choice: ")
+
+# Check the user's choice and provide feedback
+if algorithm_choice == "1":
+    ttt = TicTacToe(classic=True)
+    print("You have chosen classic algorithm")
+
+elif algorithm_choice == "2":
+    ttt = TicTacToe(reinforcement=True)
+    print("You have chosen reinforcement algorithm")
+
+elif algorithm_choice == "3":
+    ttt = TicTacToe(deep_reinforcement=True)
+    print("You have chosen deep_reinforcement algorithm")
+
+else:
+    print("Invalid choice. Please enter a number between 1 and 3.")
+
 
 pygame.init()
 size = width, height = 600, 400
@@ -112,7 +137,7 @@ while True:
         if user != player and not game_over:
             if ai_turn:
                 time.sleep(0.5)
-                move = ttt.minimax(board)
+                move = ttt.algorithm(board)
                 board = ttt.result(board, move)
                 ai_turn = False
             else:
