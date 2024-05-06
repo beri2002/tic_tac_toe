@@ -6,45 +6,12 @@ import math
 import copy
 import random
 
-# Step 1: Instantiate the TicTacToe class
-tic_tac_toe_agent = TicTacToe()
-
-# Step 2: Train the agent
-tic_tac_toe_agent.train(num_episodes=1000)  # Train for 1000 episodes
-
-# Step 3: Use the trained agent
-board = tic_tac_toe_agent.initial_state()
-while not tic_tac_toe_agent.terminal(board):
-    # Display the current state of the board
-    print("Current board state:")
-    for row in board:
-        print(" ".join(cell if cell else "-" for cell in row))
-    
-    # Get the agent's action
-    action = tic_tac_toe_agent.reinforcement_learning(board)
-    
-    # Apply the action to the board
-    board = tic_tac_toe_agent.result(board, action)
-
-# Display the final state of the board
-print("Final board state:")
-for row in board:
-    print(" ".join(cell if cell else "-" for cell in row))
-
-# Check the winner of the game
-winner = tic_tac_toe_agent.winner(board)
-if winner:
-    print("Winner:", winner)
-else:
-    print("It's a draw!")
-
-
 class TicTacToe:
     def __init__(self, classic=True, reinforcement=False, deep_reinforcement=False):
+        self.EMPTY = None
         self.board = self.initial_state()
         self.X = "X"
         self.O = "O"
-        self.EMPTY = None
 
         self.classic = classic
         self.reinforcement = reinforcement
@@ -57,19 +24,25 @@ class TicTacToe:
         self.discount_factor = 0.9
         self.epsilon = 0.1  # Epsilon for epsilon-greedy strategy
 
+        # rain the agent
+        self.train()
 
-    def algorithm(self):
+        win_rate = self.evaluate()
+        print("Win rate against random player:", win_rate)
+
+    def algorithm(self, board):
         """
         Returns the appropriate algorithm based on the current game mode.
         """
         if self.classic:
-            return self.minimax
+            return self.minimax(board)
         if self.reinforcement:
-            return self.reinforcement_learning
+            return self.reinforcement_learning(board)
         if self.deep_reinforcement:
-            return self.deep_reinforcement_learning
+            return self.deep_reinforcement_learning(board)
         
     def reinforcement_learning(self, board):
+
         # Convert the board to a hashable tuple for dictionary lookup
         state = tuple(map(tuple, board))
 
@@ -101,7 +74,7 @@ class TicTacToe:
         new_Q = old_Q + self.learning_rate * (reward + self.discount_factor * max_next_Q - old_Q)
         self.Q_values[(state, action)] = new_Q
 
-    def train(self, num_episodes=1000):
+    def train(self, num_episodes=10000):
         for _ in range(num_episodes):
             # Reset the environment
             board = self.initial_state()
@@ -115,6 +88,48 @@ class TicTacToe:
                 self.update_Q_values(board, action, reward, next_state)
                 board = next_state
                 done = self.terminal(board)
+
+    def evaluate(self, num_episodes=1000, opponent=None):
+        """
+        Evaluate the performance of the agent by playing against an opponent for a specified number of episodes.
+
+        Args:
+            num_episodes (int): Number of evaluation episodes.
+            opponent (function): Function that returns an action given the current board state. If None, a random player is used.
+
+        Returns:
+            float: Win rate of the agent.
+        """
+        wins = 0
+
+        for _ in range(num_episodes):
+            board = self.initial_state()
+            done = False
+            turn = self.X
+
+            while not done:
+                if turn == self.X:
+                    action = self.reinforcement_learning(board)
+                else:
+                    if opponent:
+                        action = opponent(board)
+                    else:
+                        action = random.choice(list(self.actions(board)))
+
+                next_state = self.result(board, action)
+                done = self.terminal(next_state)
+
+                if done:
+                    winner = self.winner(next_state)
+                    if winner == self.X:
+                        wins += 1
+                    break
+
+                board = next_state
+                turn = self.player(board)
+
+        return wins / num_episodes
+
 
     def reward(self, board):
         winner = self.winner(board)
