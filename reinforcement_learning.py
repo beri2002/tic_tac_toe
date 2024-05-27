@@ -17,8 +17,8 @@ class ReinforcementLearning(Game):
         # rain the agent
         self.train()
         
-        win_rate = self.evaluate()
-        print("Win rate against random player:", win_rate)
+        lose_rate = self.evaluate(opponent=self.reinforcement_learning)
+        print("Lose rate against reinforcement learning player:", lose_rate)
 
     def reinforcement_learning(self, board):
 
@@ -79,7 +79,7 @@ class ReinforcementLearning(Game):
         Returns:
             float: Win rate of the agent.
         """
-        wins = 0
+        losses = 0
 
         for _ in range(num_episodes):
             board = self.initial_state()
@@ -100,14 +100,14 @@ class ReinforcementLearning(Game):
 
                 if done:
                     winner = self.winner(next_state)
-                    if winner == self.X:
-                        wins += 1
+                    if winner == self.O:
+                        losses += 1
                     break
 
                 board = next_state
                 turn = self.player(board)
 
-        return wins / num_episodes
+        return losses / num_episodes
 
 
     def reward(self, board):
@@ -115,6 +115,7 @@ class ReinforcementLearning(Game):
         if winner == self.X:
             return 1
         elif winner == self.O:
-            return -1
+            return -5
         else:
             return 0
+        

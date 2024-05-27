@@ -14,16 +14,16 @@ algorithm_choice = input("Enter the number corresponding to your choice: ")
 
 # Check the user's choice and provide feedback
 if algorithm_choice == "1":
-    ttt = TicTacToe(classic=True)
     print("You have chosen classic algorithm")
+    ttt = TicTacToe(classic=True)
 
 elif algorithm_choice == "2":
-    ttt = TicTacToe(reinforcement=True)
     print("You have chosen reinforcement algorithm")
+    ttt = TicTacToe(reinforcement=True)
 
 elif algorithm_choice == "3":
-    ttt = TicTacToe(deep_reinforcement=True)
     print("You have chosen deep_reinforcement algorithm")
+    ttt = TicTacToe(deep_reinforcement=True)
 
 else:
     print("Invalid choice. Please enter a number between 1 and 3.")
