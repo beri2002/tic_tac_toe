@@ -6,16 +6,16 @@ An implementation of Tic Tac Toe featuring classic algorithms, reinforcement lea
 
 To install the required dependencies, run:
 
-\`\`\`bash
+```bash
 pip install -r requirements.txt
-\`\`\`
+```
 
 ## How to Run
 
 To start the game, run:
 
-\`\`\`bash
+```bash
 python3 runner.py
-\`\`\`
+```
 
 Follow the instructions to play the game.
