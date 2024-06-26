@@ -1,9 +1,6 @@
 """
 Tic Tac Toe Player
 """
-from reinforcement_learning import ReinforcementLearning
-from deep_reinforcement_learning import DeepReinforcementLearning
-from minimax import MiniMax
 from game import Game
 
 class TicTacToe(Game):
@@ -22,11 +19,14 @@ class TicTacToe(Game):
         Returns the appropriate algorithm based on the current game mode.
         """
         if self.classic:
+            from minimax import MiniMax
             ttt = MiniMax()
             return ttt.minimax(board)
         if self.reinforcement:
+            from reinforcement_learning import ReinforcementLearning
             ttt = ReinforcementLearning()
             return ttt.reinforcement_learning(board)
         if self.deep_reinforcement:
+            from deep_reinforcement_learning import DeepReinforcementLearning
             ttt = DeepReinforcementLearning()
             return ttt.deep_reinforcement_learning(board)
